@@ -1,3 +1,7 @@
 export const REQUEST_POSTS = 'REQUEST_POSTS';
 export const RECEIVE_POSTS_SUCCESS = 'RECEIVE_POSTS_SUCCESS';
 export const RECEIVE_POSTS_FAILURE = 'RECEIVE_POSTS_FAILURE';
+
+// Navigation.
+export const BACK = 'BACK';
+export const TOGGLE_DRAWER = 'TOGGLE_DRAWER';

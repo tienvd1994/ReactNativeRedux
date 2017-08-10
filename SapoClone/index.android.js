@@ -43,7 +43,7 @@ export default class SaleScreen extends Component {
 
 const SapoCloneStack = StackNavigator({
   Dashboard: {
-    screen: Dashboard,
+    screen: ListCustomer,
     navigationOptions: ({ navigation }) => ({
       title: 'Sapo',
       headerTitleStyle: { color: '#fff' },

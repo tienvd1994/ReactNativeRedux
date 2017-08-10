@@ -18,11 +18,12 @@ export default class CreateOrder extends Component {
 
     render() {
         const { navigate } = this.props.navigation;
+        const { params } = this.props.navigation.state;
         return (
             <View style={styles.container}>
                 <ScrollView>
                     <View style={styles.filter}>
-                        <TouchableOpacity underlayColor='transparent' style={{ flex: 1, flexDirection: 'row', paddingTop: 5, paddingBottom: 5, borderWidth: 0.5, borderColor: '#d6d7da', marginBottom: 10 }}  onPress={() => navigate('ListProduct')}>
+                        <TouchableOpacity underlayColor='transparent' style={{ flex: 1, flexDirection: 'row', paddingTop: 5, paddingBottom: 5, borderWidth: 0.5, borderColor: '#d6d7da', marginBottom: 10 }} onPress={() => navigate('ListProduct')}>
                             <Image
                                 style={styles.filterImage}
                                 source={require('./../../images/icon_customer_search.png')}
@@ -36,14 +37,14 @@ export default class CreateOrder extends Component {
                                         style={styles.filterImage}
                                         source={require('./../../images/icon_customer_search.png')}
                                     />
-                                    <Text>Khách vãng lai</Text>
+                                    <Text>{params === undefined ? `Khách vãng lai` : params.customer.ContactName}</Text>
                                 </View>
                                 <View underlayColor='transparent' style={{ flex: 1, flexDirection: 'row' }}>
                                     <Image
                                         style={styles.filterImage}
                                         source={require('./../../images/easy_phone.png')}
                                     />
-                                    <Text>0987654321</Text>
+                                    <Text>{params === undefined ? '' : params.customer.Phone}</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>

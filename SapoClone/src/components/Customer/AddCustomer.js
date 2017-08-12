@@ -14,34 +14,120 @@ import {
 } from 'react-native';
 
 export default class AddCustomer extends Component {
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: `Thêm mới đơn hàng`,
+            headerTitleStyle: {},
+            headerRight: <TouchableHighlight underlayColor='transparent' onPress={() => navigation.state.params.handleSave()}>
+                <Image
+                    style={{ width: 40, height: 40 }}
+                    source={require('./../../images/okay.png')}
+                />
+            </TouchableHighlight>,
+            headerStyle: {
+                backgroundColor: '#0fb80f',
+            },
+
+            // Color header include: arrow button left and text.
+            headerTintColor: 'white',
+        };
+    };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            customerID: '',
+            companyName: '',
+            contactName: '',
+            contactTitle: '',
+            address: '',
+            city: '',
+            region: '',
+            postalCode: '',
+            country: '',
+            phone: '',
+            fax: ''
+        };
+    }
+
+    componentDidMount() {
+        this.props.navigation.setParams({ handleSave: this.addCustomer });
+    }
+
+    addCustomer = () => {
+        let obj = {
+            CustomerID: this.state.customerID,
+            CompanyName: this.state.companyName,
+            ContactName: this.state.contactName,
+            ContactTitle: this.state.contactTitle,
+            Address: this.state.address,
+            City: this.state.city,
+            Region: this.state.regionity,
+            PostalCode: this.state.postalCode,
+            Country: this.state.country,
+            Phone: this.state.phone,
+            Fax: this.state.fax
+        };
+
+        fetch('http://192.168.100.200:88/api/Customers', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(obj)
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                this.props.navigation.navigate('CreateOrder', { customer: responseJson });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     render() {
         const { navigate } = this.props.navigation;
         return (
             <ScrollView style={styles.container}>
                 <View style={styles.filter}>
                     <View style={styles.wrapperControl}>
-                        <Text style={styles.labelControl}>Tên khách hàng</Text>
-                        <TextInput
-                            underlineColorAndroid='transparent'
-                            placeholder='Nhập tên khách hàng'
-                            placeholderTextColor='red'
-                        />
-                    </View>
-                    <View style={styles.wrapperControl}>
                         <Text style={styles.labelControl}>Mã khách hàng</Text>
                         <TextInput
                             underlineColorAndroid='transparent'
                             placeholder='Nhập mã khách hàng'
                             placeholderTextColor='#a9a9a9'
+                            value={this.state.customerID}
+                            onChangeText={(value) => this.setState({ customerID: value })}
                         />
                     </View>
                     <View style={styles.wrapperControl}>
-                        <Text style={styles.labelControl}>Nhóm khách hàng</Text>
+                        <Text style={styles.labelControl}>Tên công ty</Text>
+                        <TextInput
+                            underlineColorAndroid='transparent'
+                            placeholder='Nhập tên công ty'
+                            placeholderTextColor='red'
+                            value={this.state.companyName}
+                            onChangeText={(value) => this.setState({ companyName: value })}
+                        />
+                    </View>
+                    <View style={styles.wrapperControl}>
+                        <Text style={styles.labelControl}>Tên khách hàng</Text>
+                        <TextInput
+                            underlineColorAndroid='transparent'
+                            placeholder='Nhập tên khách hàng'
+                            placeholderTextColor='red'
+                            value={this.state.contactName}
+                            onChangeText={(value) => this.setState({ contactName: value })}
+                        />
+                    </View>
+                    <View style={styles.wrapperControl}>
+                        <Text style={styles.labelControl}>City</Text>
                         <Picker
-                            selectedValue={''}
-                            style={{ borderWidth: 0.5, borderColor: '#d6d7da' }}
+                            selectedValue={this.state.city}
+                            style={styles.pickerBorder}
                             mode='dropdown'
-                            onValueChange={(itemValue, itemIndex) => console.log(itemValue)}>
+                            onValueChange={(itemValue, itemIndex) => this.setState({ city: itemValue })}>
                             <Picker.Item label="" value="" />
                             <Picker.Item label="Vip" value="vip" />
                             <Picker.Item label="Bán buôn" value="banbuon" />
@@ -77,6 +163,8 @@ export default class AddCustomer extends Component {
                             placeholder='Nhập số điện thoại'
                             placeholderTextColor='red'
                             keyboardType='numeric'
+                            value={this.state.phone}
+                            onChangeText={(value) => this.setState({ phone: value })}
                         />
                     </View>
                     <View style={styles.wrapperControl}>
@@ -86,14 +174,8 @@ export default class AddCustomer extends Component {
                             placeholder='Nhập số fax'
                             placeholderTextColor='#a9a9a9'
                             keyboardType='numeric'
-                        />
-                    </View>
-                    <View style={styles.wrapperControl}>
-                        <Text style={styles.labelControl}>Website</Text>
-                        <TextInput
-                            underlineColorAndroid='transparent'
-                            placeholder='Nhập website'
-                            placeholderTextColor='#a9a9a9'
+                            value={this.state.fax}
+                            onChangeText={(value) => this.setState({ fax: value })}
                         />
                     </View>
                     <View style={styles.wrapperControl}>
@@ -118,6 +200,8 @@ export default class AddCustomer extends Component {
                             underlineColorAndroid='transparent'
                             placeholder='Nhập địa chỉ'
                             placeholderTextColor='red'
+                            value={this.state.address}
+                            onChangeText={(value) => this.setState({ address: value })}
                         />
                     </View>
                 </View>
@@ -129,9 +213,8 @@ export default class AddCustomer extends Component {
                         <Text style={styles.labelControl}>Người phụ trách</Text>
                         <Picker
                             selectedValue={''}
-                            style={{ borderWidth: 0.5, borderColor: '#d6d7da' }}
-                            mode='dropdown'
-                            onValueChange={(itemValue, itemIndex) => console.log(itemValue)}>
+                            style={styles.pickerBorder}
+                            mode='dropdown'>
                             <Picker.Item label="Chọn người phụ trách" value="" />
                             <Picker.Item label="Vip" value="vip" />
                             <Picker.Item label="Bán buôn" value="banbuon" />
@@ -142,9 +225,8 @@ export default class AddCustomer extends Component {
                         <Text style={styles.labelControl}>Giá mặc định</Text>
                         <Picker
                             selectedValue={''}
-                            style={{ borderWidth: 0.5, borderColor: '#d6d7da' }}
-                            mode='dropdown'
-                            onValueChange={(itemValue, itemIndex) => console.log(itemValue)}>
+                            style={styles.pickerBorder}
+                            mode='dropdown'>
                             <Picker.Item label="Chọn giá mặc định" value="" />
                             <Picker.Item label="Giá bán lẻ" value="vip" />
                             <Picker.Item label="Bán nhập" value="banbuon" />
@@ -155,9 +237,8 @@ export default class AddCustomer extends Component {
                         <Text style={styles.labelControl}>Thuế mặc định</Text>
                         <Picker
                             selectedValue={''}
-                            style={{ borderWidth: 0.5, borderColor: '#d6d7da' }}
-                            mode='dropdown'
-                            onValueChange={(itemValue, itemIndex) => console.log(itemValue)}>
+                            style={styles.pickerBorder}
+                            mode='dropdown'>
                             <Picker.Item label="Chọn thuế mặc định" value="" />
                             <Picker.Item label="Thuế nhập hàng" value="vip" />
                             <Picker.Item label="Không áp dụng thuế" value="banbuon" />
@@ -177,9 +258,8 @@ export default class AddCustomer extends Component {
                         <Text style={styles.labelControl}>Kỳ hạn thanh toán</Text>
                         <Picker
                             selectedValue={''}
-                            style={{ borderWidth: 0.5, borderColor: '#d6d7da' }}
-                            mode='dropdown'
-                            onValueChange={(itemValue, itemIndex) => console.log(itemValue)}>
+                            style={styles.pickerBorder}
+                            mode='dropdown'>
                             <Picker.Item label="Chọn kỳ hạn thanh toán" value="" />
                             <Picker.Item label="Thanh toán trong 1 tháng" value="vip" />
                             <Picker.Item label="Thanh toán trong 1 tuần" value="banbuon" />
@@ -190,9 +270,8 @@ export default class AddCustomer extends Component {
                         <Text style={styles.labelControl}>Phương thức thanh toán</Text>
                         <Picker
                             selectedValue={''}
-                            style={{ borderWidth: 0.5, borderColor: '#d6d7da' }}
-                            mode='dropdown'
-                            onValueChange={(itemValue, itemIndex) => console.log(itemValue)}>
+                            style={styles.pickerBorder}
+                            mode='dropdown'>
                             <Picker.Item label="Chọn phương thức thanh toán" value="" />
                             <Picker.Item label="Thanh toán bằng điểm" value="vip" />
                             <Picker.Item label="COD" value="banbuon" />
@@ -242,5 +321,9 @@ const styles = StyleSheet.create({
         color: '#0fb80f',
         fontSize: 10,
         marginTop: 5
+    },
+    pickerBorder: {
+        borderWidth: 0.5,
+        borderColor: '#d6d7da'
     }
 });

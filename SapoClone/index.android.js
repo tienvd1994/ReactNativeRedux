@@ -43,7 +43,7 @@ export default class SaleScreen extends Component {
 
 const SapoCloneStack = StackNavigator({
   Dashboard: {
-    screen: ListCustomer,
+    screen: AddCustomer,
     navigationOptions: ({ navigation }) => ({
       title: 'Sapo',
       headerTitleStyle: { color: '#fff' },
@@ -134,23 +134,7 @@ const SapoCloneStack = StackNavigator({
   },
 
   AddCustomer: {
-    screen: AddCustomer,
-    navigationOptions: ({ navigation }) => ({
-      title: `Thêm mới đơn hàng`,
-      headerTitleStyle: {},
-      headerRight: <TouchableHighlight underlayColor='transparent' onPress={() => navigation.goBack()}>
-        <Image
-          style={{ width: 40, height: 40 }}
-          source={require('./src/images/okay.png')}
-        />
-      </TouchableHighlight>,
-      headerStyle: {
-        backgroundColor: '#0fb80f',
-      },
-
-      // Color header include: arrow button left and text.
-      headerTintColor: 'white',
-    })
+    screen: AddCustomer
   },
   ListProduct: {
     screen: ListProduct,

@@ -43,7 +43,7 @@ export default class Sale extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.5, borderColor: '#d6d7da' }}>
-                    <TouchableOpacity underlayColor='transparent' style={{ flex: 1, alignItems: 'center', justifyContent: 'center', borderRightWidth: 0.5, borderColor: '#d6d7da' }} onPress={() => console.log('xxx')}>
+                    <TouchableOpacity underlayColor='transparent' style={{ flex: 1, alignItems: 'center', justifyContent: 'center', borderRightWidth: 0.5, borderColor: '#d6d7da' }} onPress={() => ('xxx')}>
                         <Image
                             style={{ width: 50, height: 50 }}
                             source={require('./../images/easy_delivery_icon.png')}

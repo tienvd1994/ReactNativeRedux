@@ -37,7 +37,7 @@ class StackNavigation extends Component {
 }
 
 const mapStateToProps = function (state) {
-    console.log('mapStateToProps: ' + JSON.stringify(state));
+    // console.log('mapStateToProps: ' + JSON.stringify(state));
     return { navigation: state.stack }
 }
 

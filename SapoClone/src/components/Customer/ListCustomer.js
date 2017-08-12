@@ -5,7 +5,6 @@ import {
     View,
     TouchableOpacity,
     Image,
-    ScrollView,
     TextInput,
     ListView,
     ActivityIndicator,
@@ -51,10 +50,10 @@ export default class ListCustomer extends Component {
     renderRow(rowData) {
         return (
             <TouchableOpacity style={styles.filter} onPress={() => this.choosenCustomer(rowData)}>
-                <View style={{ flex: 1, flexDirection: 'row', paddingTop: 10, paddingBottom: 10, borderBottomWidth: 0.5, borderColor: '#d6d7da' }}>
+                <View style={styles.containerItem}>
                     <View style={styles.label}>
                         <Text>{rowData.ContactName}</Text>
-                        <Text style={{ color: '#a9a9a9' }}>{rowData.Phone}</Text>
+                        <Text style={styles.silver}>{rowData.Phone}</Text>
                     </View>
                     <View style={styles.price}>
                         <Text style={styles.status}>ĐANG GIAO HÀNG</Text>
@@ -98,8 +97,6 @@ export default class ListCustomer extends Component {
                     currentPage: this.state.currentPage + 1,
                     isLoadingTail: false,
                 });
-
-                console.log(resultArray.length);
             })
             .catch((error) => {
                 console.log(error);
@@ -136,7 +133,7 @@ export default class ListCustomer extends Component {
     render() {
         if (this.state.isLoading) {
             return (
-                <View style={{ flex: 1, paddingTop: 20 }}>
+                <View style={styles.loadIcon}>
                     <ActivityIndicator />
                 </View>
             );
@@ -210,4 +207,19 @@ const styles = StyleSheet.create({
     // scrollSpinner: {
     //     marginVertical: 20,
     // },
+    silver: {
+        color: '#a9a9a9'
+    },
+    loadIcon: {
+        flex: 1,
+        paddingTop: 20
+    },
+    containerItem: {
+        flex: 1,
+        flexDirection: 'row',
+        paddingTop: 10,
+        paddingBottom: 10,
+        borderBottomWidth: 0.5,
+        borderColor: '#d6d7da'
+    }
 });

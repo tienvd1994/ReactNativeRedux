@@ -6,26 +6,83 @@ import {
     TouchableOpacity,
     Image,
     ScrollView,
-    TextInput
+    TextInput,
+    ListView
 } from 'react-native';
+
+let resultArray = [];
 
 export default class ListProduct extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            text: 'Useless Multiline Placeholder',
+            txtSearch: "",
+            isLoading: true,
+            refreshing: false,
+            currentPage: 1,
+            isLoadingTail: false,
+            dataSource: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 != r2 }),
         };
+    }
+
+    componentDidMount() {
+        return fetch('http://192.168.100.200:88/api/Products?keyword=' + this.state.txtSearch + '&pageIndex=' + this.state.currentPage + '&pageSize=20')
+            .then((response) => response.json())
+            .then((responseJson) => {
+                resultArray = responseJson
+                this.setState({
+                    isLoading: false,
+                    dataSource: this.state.dataSource.cloneWithRows(resultArray),
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    choosenProduct(rowData) {
+        this.props.navigation.navigate('CreateOrder', { product: rowData });
+    }
+
+    renderRow(rowData) {
+        return (
+            <TouchableOpacity style={styles.filter} onPress={() => this.choosenProduct(rowData)}>
+                <View style={styles.productImage}>
+                    <Image
+                        style={{ width: 50, height: 50 }}
+                        source={require('./../../images/easy_product.png')}
+                    />
+                </View>
+                <View style={{ flex: 1, paddingTop: 10 }}>
+                    <View style={styles.label}>
+                        <Text>{rowData.ProductName}</Text>
+                        <View style={styles.discount}>
+                            <Text>Thuế: 0%</Text>
+                        </View>
+                    </View>
+                    <View style={styles.label}>
+                        <View style={styles.discount}>
+                            <Text>CK: 0%</Text>
+                        </View>
+                    </View>
+                    <View style={styles.label}>
+                        <Text>
+                            Có thể bán: {rowData.QuantityPerUnit}
+                        </Text>
+                        <View style={styles.discount}>
+                            <Text>{rowData.UnitPrice} đ</Text>
+                        </View>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
     }
 
     render() {
         return (
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
                 <View style={styles.search}>
-                    {/* <Image
-                        style={{ width: 20, height: 20 }}
-                        source={require('./../../images/ic_search_gray.png')}
-                    /> */}
-                    <View style={{ flex: 1 }}>
+                    <View>
                         <TextInput
                             underlineColorAndroid='transparent'
                             placeholder='Tìm kiếm khách hàng'
@@ -34,69 +91,11 @@ export default class ListProduct extends Component {
                         />
                     </View>
                 </View>
-                <View style={{ marginTop: 5 }}>
-                    <View style={styles.filter}>
-                        <View style={{ flex: 1, flexDirection: 'row', paddingTop: 10, paddingBottom: 10, borderBottomWidth: 0.5, borderColor: '#d6d7da' }}>
-                            <View style={styles.label}>
-                                <Text>
-                                    Cô huệ
-                                </Text>
-                                <Text style={{ color: '#a9a9a9' }}>
-                                    0987654321
-                                </Text>
-                            </View>
-                            <View style={styles.price}>
-                                <Text style={styles.status}>ĐANG GIAO HÀNG</Text>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={styles.filter}>
-                        <View style={{ flex: 1, flexDirection: 'row', paddingTop: 10, paddingBottom: 10, borderBottomWidth: 0.5, borderColor: '#d6d7da' }}>
-                            <View style={styles.label}>
-                                <Text>
-                                    Cô huệ
-                                </Text>
-                                <Text style={{ color: '#a9a9a9', fontSize: 12 }}>
-                                    0987654321
-                                </Text>
-                            </View>
-                            <View style={styles.price}>
-                                <Text style={styles.status}>ĐANG GIAO HÀNG</Text>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={styles.filter}>
-                        <View style={{ flex: 1, flexDirection: 'row', paddingTop: 10, paddingBottom: 10, borderBottomWidth: 0.5, borderColor: '#d6d7da' }}>
-                            <View style={styles.label}>
-                                <Text>
-                                    Cô huệ
-                                </Text>
-                                <Text style={{ color: '#a9a9a9', fontSize: 12 }}>
-                                    0987654321
-                                </Text>
-                            </View>
-                            <View style={styles.price}>
-                                <Text style={styles.status}>ĐANG GIAO HÀNG</Text>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={styles.filter}>
-                        <View style={{ flex: 1, flexDirection: 'row', paddingTop: 10, paddingBottom: 10, borderBottomWidth: 0.5, borderColor: '#d6d7da' }}>
-                            <View style={styles.label}>
-                                <Text>
-                                    Cô huệ
-                                </Text>
-                                <Text style={{ color: '#a9a9a9' }}>
-                                    0987654321
-                                </Text>
-                            </View>
-                            <View style={styles.price}>
-                                <Text style={styles.status}>ĐANG GIAO HÀNG</Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </ScrollView >
+                <ListView
+                    dataSource={this.state.dataSource}
+                    renderRow={this.renderRow.bind(this)}
+                />
+            </View>
         )
     }
 }
@@ -111,7 +110,10 @@ const styles = StyleSheet.create({
         marginRight: 5,
         paddingLeft: 10,
         flex: 1,
-        flexDirection: 'row',
+        borderBottomWidth: 0.5,
+        borderColor: '#d6d7da',
+        marginTop: 5,
+        flexDirection: 'row'
 
     },
     search: {
@@ -120,9 +122,6 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5,
         paddingLeft: 10,
-        flex: 1,
-        flexDirection: 'row',
-
     },
     price: {
         flex: 1,
@@ -131,8 +130,20 @@ const styles = StyleSheet.create({
     },
     label: {
         flex: 1,
+        flexDirection: 'row',
+        marginBottom: 10
     },
     status: {
         color: '#0fb80f'
+    },
+    productImage: {
+        width: 70,
+        height: 50,
+        paddingTop: 20
+    },
+    discount: {
+        flex: 1,
+        alignItems: 'flex-end',
+        marginRight: 10
     }
 });

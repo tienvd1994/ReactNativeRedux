@@ -26,6 +26,8 @@ import CreateOrder from './src/components/Order/CreateOrder';
 import ListCustomer from './src/components/Customer/ListCustomer';
 import AddCustomer from './src/components/Customer/AddCustomer';
 import ListProduct from './src/components/Product/ListProduct';
+import Payment from './src/components/Payment/Payment';
+import List from './src/components/Order/List';
 
 import CheckBox from 'react-native-check-box'
 
@@ -43,7 +45,7 @@ export default class SaleScreen extends Component {
 
 const SapoCloneStack = StackNavigator({
   Dashboard: {
-    screen: AddCustomer,
+    screen: Dashboard,
     navigationOptions: ({ navigation }) => ({
       title: 'Sapo',
       headerTitleStyle: { color: '#fff' },
@@ -136,10 +138,38 @@ const SapoCloneStack = StackNavigator({
   AddCustomer: {
     screen: AddCustomer
   },
+  Payment: {
+    screen: Payment,
+    navigationOptions: ({ navigation }) => ({
+      title: `Thanh toán`,
+      headerTitleStyle: {},
+      headerRight: '',
+      headerStyle: {
+        backgroundColor: '#0fb80f',
+      },
+
+      // Color header include: arrow button left and text.
+      headerTintColor: 'white',
+    })
+  },
   ListProduct: {
     screen: ListProduct,
     navigationOptions: ({ navigation }) => ({
       title: `Danh sách hàng hóa`,
+      headerTitleStyle: {},
+      headerRight: '',
+      headerStyle: {
+        backgroundColor: '#0fb80f',
+      },
+
+      // Color header include: arrow button left and text.
+      headerTintColor: 'white',
+    })
+  },
+  List: {
+    screen: List,
+    navigationOptions: ({ navigation }) => ({
+      title: `Đơn hàng`,
       headerTitleStyle: {},
       headerRight: '',
       headerStyle: {

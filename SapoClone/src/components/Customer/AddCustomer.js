@@ -10,7 +10,8 @@ import {
     TouchableHighlight,
     ScrollView,
     TextInput,
-    Picker
+    Picker,
+    Alert
 } from 'react-native';
 
 export default class AddCustomer extends Component {
@@ -55,6 +56,33 @@ export default class AddCustomer extends Component {
     }
 
     addCustomer = () => {
+        if (this.state.customerID.length > 5) {
+            Alert.alert(
+                'Mã khách hàng không được nhập quá 5 ký tự',
+                '',
+                [
+                    { text: 'OK', onPress: () => { return; } }
+                ],
+                { cancelable: false }
+            )
+
+            return;
+        }
+
+
+        if (this.state.customerID === '' || this.state.companyName === '' || this.state.contactName === '' || this.state.phone === '') {
+            Alert.alert(
+                'Vui lòng nhập đầy đủ thông tin',
+                '',
+                [
+                    { text: 'OK', onPress: () => { return; } }
+                ],
+                { cancelable: false }
+            )
+
+            return;
+        }
+
         let obj = {
             CustomerID: this.state.customerID,
             CompanyName: this.state.companyName,
@@ -79,7 +107,20 @@ export default class AddCustomer extends Component {
         })
             .then((response) => response.json())
             .then((responseJson) => {
-                this.props.navigation.navigate('CreateOrder', { customer: responseJson });
+                if (responseJson.status) {
+                    this.props.navigation.navigate('CreateOrder', { customer: responseJson.data });
+                    return;
+                }
+                else {
+                    Alert.alert(
+                        responseJson.data,
+                        '',
+                        [
+                            { text: 'OK', onPress: () => { return; } }
+                        ],
+                        { cancelable: false }
+                    )
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -96,7 +137,7 @@ export default class AddCustomer extends Component {
                         <TextInput
                             underlineColorAndroid='transparent'
                             placeholder='Nhập mã khách hàng'
-                            placeholderTextColor='#a9a9a9'
+                            placeholderTextColor='red'
                             value={this.state.customerID}
                             onChangeText={(value) => this.setState({ customerID: value })}
                         />
@@ -129,27 +170,10 @@ export default class AddCustomer extends Component {
                             mode='dropdown'
                             onValueChange={(itemValue, itemIndex) => this.setState({ city: itemValue })}>
                             <Picker.Item label="" value="" />
-                            <Picker.Item label="Vip" value="vip" />
-                            <Picker.Item label="Bán buôn" value="banbuon" />
-                            <Picker.Item label="Bán lẻ" value="banle" />
+                            <Picker.Item label="Hà Nội" value="hn" />
+                            <Picker.Item label="Thài Bình" value="tb" />
+                            <Picker.Item label="Phú Thọ" value="pt" />
                         </Picker>
-                    </View>
-                    <View style={styles.wrapperControl}>
-                        <Text style={styles.labelControl}>Mã số thuế</Text>
-                        <TextInput
-                            underlineColorAndroid='transparent'
-                            placeholder='Nhập mã số thuế'
-                            placeholderTextColor='#a9a9a9'
-                            keyboardType='numeric'
-                        />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.labelControl}>Thẻ</Text>
-                        <TextInput
-                            underlineColorAndroid='transparent'
-                            placeholder='Nhập thẻ'
-                            placeholderTextColor='#a9a9a9'
-                        />
                     </View>
                 </View>
                 <View style={{ marginLeft: 8, marginTop: 8 }}>
@@ -178,7 +202,7 @@ export default class AddCustomer extends Component {
                             onChangeText={(value) => this.setState({ fax: value })}
                         />
                     </View>
-                    <View style={styles.wrapperControl}>
+                    {/* <View style={styles.wrapperControl}>
                         <Text style={styles.labelControl}>Email</Text>
                         <TextInput
                             underlineColorAndroid='transparent'
@@ -193,19 +217,19 @@ export default class AddCustomer extends Component {
                             placeholder='Nhập địa điểm'
                             placeholderTextColor='red'
                         />
-                    </View>
+                    </View> */}
                     <View style={{ flex: 1 }}>
                         <Text style={styles.labelControl}>Địa chỉ</Text>
                         <TextInput
                             underlineColorAndroid='transparent'
                             placeholder='Nhập địa chỉ'
-                            placeholderTextColor='red'
+                            placeholderTextColor='#a9a9a9'
                             value={this.state.address}
                             onChangeText={(value) => this.setState({ address: value })}
                         />
                     </View>
                 </View>
-                <View style={{ marginLeft: 8, marginTop: 8 }}>
+                {/* <View style={{ marginLeft: 8, marginTop: 8 }}>
                     <Text style={{ color: '#a9a9a9' }}>CHINH SACH</Text>
                 </View>
                 <View style={styles.filter}>
@@ -279,7 +303,7 @@ export default class AddCustomer extends Component {
                             <Picker.Item label="Tiền mặt" value="banle" />
                         </Picker>
                     </View>
-                </View>
+                </View> */}
             </ScrollView>
         );
     }

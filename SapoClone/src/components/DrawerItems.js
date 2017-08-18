@@ -53,7 +53,7 @@ export default class DrawerItems extends Component {
             />
             <Text>Khách hàng</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menu_item} onPress={() => navigate('Sale')}>
+          <TouchableOpacity style={styles.menu_item} onPress={() => navigate('ListCustomer')}>
             <Image
               style={styles.menu_image}
               source={require('./../images/ic_report_chart.png')}

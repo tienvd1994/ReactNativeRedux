@@ -8,8 +8,11 @@ import {
     TextInput,
     ListView,
     ActivityIndicator,
-    RefreshControl
+    RefreshControl,
+    AsyncStorage
 } from 'react-native';
+
+import { LOGIN_ACCESS_TOKEN } from './../../constants/AsyncStoregeName';
 
 let resultArray = [];
 
@@ -26,8 +29,16 @@ export default class ListCustomer extends Component {
         };
     }
 
-    componentDidMount() {
-        return fetch('http://192.168.100.200:88/api/Customers?keyword=' + this.state.txtSearch + '&pageIndex=' + this.state.currentPage + '&pageSize=20')
+    async componentDidMount() {
+        const login_access_token = await AsyncStorage.getItem(LOGIN_ACCESS_TOKEN);
+
+        return fetch('http://192.168.100.200:88/api/Customers?keyword=' + this.state.txtSearch + '&pageIndex=' + this.state.currentPage + '&pageSize=20',
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + login_access_token
+                }
+            })
             .then((response) => response.json())
             .then((responseJson) => {
                 resultArray = responseJson
@@ -63,8 +74,16 @@ export default class ListCustomer extends Component {
         );
     }
 
-    _onRefresh() {
-        fetch('http://192.168.100.200:88/api/Customers?keyword=' + this.state.txtSearch + '&pageIndex=1&pageSize=20')
+    async  _onRefresh() {
+        const login_access_token = await AsyncStorage.getItem(LOGIN_ACCESS_TOKEN);
+
+        fetch('http://192.168.100.200:88/api/Customers?keyword=' + this.state.txtSearch + '&pageIndex=1&pageSize=20',
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + login_access_token
+                }
+            })
             .then((response) => response.json())
             .then((responseJson) => {
                 resultArray = [];
@@ -79,7 +98,7 @@ export default class ListCustomer extends Component {
             });
     }
 
-    _onEndReached() {
+    async _onEndReached() {
         if (this.state.isLoadingTail) {
             return;
         }
@@ -88,7 +107,15 @@ export default class ListCustomer extends Component {
             isLoadingTail: true,
         });
 
-        fetch('http://192.168.100.200:88/api/Customers?keyword=' + this.state.txtSearch + '&pageIndex=' + (this.state.currentPage + 1) + '&pageSize=20')
+        const login_access_token = await AsyncStorage.getItem(LOGIN_ACCESS_TOKEN);
+
+        fetch('http://192.168.100.200:88/api/Customers?keyword=' + this.state.txtSearch + '&pageIndex=' + (this.state.currentPage + 1) + '&pageSize=20',
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + login_access_token
+                }
+            })
             .then((response) => response.json())
             .then((responseJson) => {
                 resultArray = resultArray.concat(responseJson)

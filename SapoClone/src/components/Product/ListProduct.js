@@ -7,8 +7,12 @@ import {
     Image,
     ScrollView,
     TextInput,
-    ListView
+    ListView,
+    RefreshControl,
+    AsyncStorage
 } from 'react-native';
+
+import { LOGIN_ACCESS_TOKEN } from './../../constants/AsyncStoregeName';
 
 let resultArray = [];
 
@@ -25,8 +29,15 @@ export default class ListProduct extends Component {
         };
     }
 
-    componentDidMount() {
-        return fetch('http://192.168.100.200:88/api/Products?keyword=' + this.state.txtSearch + '&pageIndex=' + this.state.currentPage + '&pageSize=20')
+    async  componentDidMount() {
+        const login_access_token = await AsyncStorage.getItem(LOGIN_ACCESS_TOKEN);
+
+        return fetch('http://192.168.100.200:88/api/Products?keyword=' + this.state.txtSearch + '&pageIndex=' + this.state.currentPage + '&pageSize=20', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + login_access_token
+            }
+        })
             .then((response) => response.json())
             .then((responseJson) => {
                 resultArray = responseJson
@@ -42,6 +53,79 @@ export default class ListProduct extends Component {
 
     choosenProduct(rowData) {
         this.props.navigation.navigate('CreateOrder', { product: rowData });
+    }
+
+    async  onTextSearchChange(event) {
+        let txtSearch = event.nativeEvent.text;
+        this.setState({ txtSearch });
+        const login_access_token = await AsyncStorage.getItem(LOGIN_ACCESS_TOKEN);
+
+        return fetch('http://192.168.100.200:88/api/Products?keyword=' + this.state.txtSearch + '&pageIndex=1&pageSize=20', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + login_access_token
+            }
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                resultArray = [];
+                resultArray = responseJson;
+                this.setState({
+                    isLoading: false,
+                    dataSource: this.state.dataSource.cloneWithRows(resultArray),
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    async  _onRefresh() {
+        const login_access_token = await AsyncStorage.getItem(LOGIN_ACCESS_TOKEN);
+
+        fetch('http://192.168.100.200:88/api/Products?keyword=' + this.state.txtSearch + '&pageIndex=1&pageSize=20',
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + login_access_token
+                }
+            })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                resultArray = [];
+                resultArray = responseJson
+                this.setState({
+                    refreshing: false,
+                    dataSource: this.state.dataSource.cloneWithRows(resultArray),
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    async _onEndReached() {
+        const login_access_token = await AsyncStorage.getItem(LOGIN_ACCESS_TOKEN);
+
+        fetch('http://192.168.100.200:88/api/Products?keyword=' + this.state.txtSearch + '&pageIndex=' + (this.state.currentPage + 1) + '&pageSize=20',
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + login_access_token
+                }
+            })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                resultArray = resultArray.concat(responseJson)
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(resultArray),
+                    currentPage: this.state.currentPage + 1,
+                    isLoadingTail: false,
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     renderRow(rowData) {
@@ -88,10 +172,19 @@ export default class ListProduct extends Component {
                             placeholder='Tìm kiếm khách hàng'
                             placeholderTextColor='#d8d8d8'
                             autoFocus={true}
+                            value={this.state.txtSearch}
+                            onChange={this.onTextSearchChange.bind(this)}
                         />
                     </View>
                 </View>
                 <ListView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh.bind(this)}
+                        />
+                    }
+                    onEndReached={this._onEndReached.bind(this)}
                     dataSource={this.state.dataSource}
                     renderRow={this.renderRow.bind(this)}
                 />

@@ -9,8 +9,11 @@ import {
     ScrollView,
     Switch,
     ListView,
-    Alert
+    Alert,
+    AsyncStorage
 } from 'react-native';
+
+import { LOGIN_ACCESS_TOKEN } from './../../constants/AsyncStoregeName';
 
 export default class Payment extends Component {
     constructor(props) {
@@ -20,18 +23,21 @@ export default class Payment extends Component {
         };
     }
 
-    savePayment(customers, products) {
+    async savePayment(customers, products) {
         let obj = {
             OrderID: 0,
             CustomerID: customers.length === 0 ? 0 : customers[0].CustomerID,
             Products: products
         };
 
+        const login_access_token = await AsyncStorage.getItem(LOGIN_ACCESS_TOKEN);
+
         fetch('http://192.168.100.200:88/api/Orders', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + login_access_token
             },
             body: JSON.stringify(obj)
         })
@@ -60,7 +66,6 @@ export default class Payment extends Component {
 
     render() {
         const { params } = this.props.navigation.state;
-        console.log(params);
 
         return (
             <View style={styles.container}>
@@ -110,7 +115,7 @@ export default class Payment extends Component {
                         </View>
                         <View style={{ flex: 1, flexDirection: 'row', paddingTop: 10 }}>
                             <Text underlayColor='transparent' style={styles.label}>
-                                Đã bao gồm thuế:
+                                In hóa đơn
                             </Text>
                             <View style={styles.price}>
                                 <Switch

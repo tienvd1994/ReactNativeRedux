@@ -8,12 +8,14 @@ import {
     Button,
     Image,
     TouchableHighlight,
-    ScrollView
+    ScrollView,
+    AsyncStorage
 } from 'react-native';
 
 export default class Dashboard extends Component {
     render() {
         const { navigate } = this.props.navigation;
+        const access_token = AsyncStorage.getItem('Login_access_token');
         return (
             <ScrollView style={styles.container}>
                 <StatusBar backgroundColor="#017a01" />

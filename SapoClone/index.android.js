@@ -29,19 +29,8 @@ import ListProduct from './src/components/Product/ListProduct';
 import Payment from './src/components/Payment/Payment';
 import List from './src/components/Order/List';
 
-import CheckBox from 'react-native-check-box'
-
-export default class SaleScreen extends Component {
-  render() {
-    const { navigate } = this.props.navigation;
-    return (
-      <View>
-        <StatusBar backgroundColor="#32cd32" />
-        <Text>This is sale screen.</Text>
-      </View>
-    );
-  }
-}
+import CheckBox from 'react-native-check-box';
+import Login from './src/components/Account/Login';
 
 const SapoCloneStack = StackNavigator({
   Dashboard: {
@@ -96,21 +85,61 @@ const SapoCloneStack = StackNavigator({
       },
     })
   },
+  // CreateOrder: {
+  //   screen: CreateOrder,
+  //   navigationOptions: ({ navigation }) => ({
+  //     title: `Thêm mới đơn hàng`,
+  //     headerTitleStyle: {},
+  //     headerRight: <TouchableHighlight underlayColor='transparent' onPress={() => navigation.navigate('ListCustomer')}>
+  //       <Image
+  //         style={{ width: 40, height: 40 }}
+  //         source={require('./src/images/easy_action_setting.png')}
+  //       />
+  //     </TouchableHighlight>,
+  //     headerStyle: {
+  //       backgroundColor: '#0fb80f',
+  //     },
+
+  //     // Color header include: arrow button left and text.
+  //     headerTintColor: 'white',
+  //   })
+  // },
   CreateOrder: {
     screen: CreateOrder,
     navigationOptions: ({ navigation }) => ({
-      title: `Thêm mới đơn hàng`,
-      headerTitleStyle: {},
-      headerRight: <TouchableHighlight underlayColor='transparent' onPress={() => navigation.navigate('ListCustomer')}>
-        <Image
-          style={{ width: 40, height: 40 }}
-          source={require('./src/images/easy_action_setting.png')}
-        />
-      </TouchableHighlight>,
-      headerStyle: {
-        backgroundColor: '#0fb80f',
-      },
-
+      header: (
+        <View style={{ alignItems: 'center', flexDirection: 'row', backgroundColor: 'transparent', backgroundColor: '#0fb80f', paddingTop: 5, paddingBottom: 5 }}>
+          <TouchableHighlight underlayColor='transparent' onPress={() => navigation.goBack()} style={{ marginLeft: 15, marginRight: 15 }}>
+            <Image
+              style={{ width: 25, height: 25, tintColor: 'white' }}
+              source={require('./src/images/back-icon.png')}
+            />
+          </TouchableHighlight>
+          <View>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 17 }}>Thêm mới đơn hàng</Text>
+          </View>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <TouchableHighlight underlayColor='transparent' onPress={() => navigation.navigate('ListCustomer')}>
+              <Image
+                style={{ width: 40, height: 40 }}
+                source={require('./src/images/easy_scan.png')}
+              />
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor='transparent' onPress={() => navigation.navigate('ListCustomer')}>
+              <Image
+                style={{ width: 40, height: 40 }}
+                source={require('./src/images/easy_voice.png')}
+              />
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor='transparent' onPress={() => navigation.navigate('ListCustomer')}>
+              <Image
+                style={{ width: 40, height: 40 }}
+                source={require('./src/images/easy_action_setting.png')}
+              />
+            </TouchableHighlight>
+          </View>
+        </View>
+      ),
       // Color header include: arrow button left and text.
       headerTintColor: 'white',
     })
@@ -183,6 +212,9 @@ const SapoCloneStack = StackNavigator({
 });
 
 const SapoCloneDrawer = DrawerNavigator({
+  Login: {
+    screen: Login
+  },
   Dashboard: {
     screen: SapoCloneStack,
   },

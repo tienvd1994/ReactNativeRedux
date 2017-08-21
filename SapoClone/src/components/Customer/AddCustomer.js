@@ -11,8 +11,11 @@ import {
     ScrollView,
     TextInput,
     Picker,
-    Alert
+    Alert,
+    AsyncStorage
 } from 'react-native';
+
+import { LOGIN_ACCESS_TOKEN } from './../../constants/AsyncStoregeName';
 
 export default class AddCustomer extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -52,10 +55,10 @@ export default class AddCustomer extends Component {
     }
 
     componentDidMount() {
-        this.props.navigation.setParams({ handleSave: this.addCustomer });
+        this.props.navigation.setParams({ handleSave: this.addCustomer.bind(this) });
     }
 
-    addCustomer = () => {
+    async addCustomer() {
         if (this.state.customerID.length > 5) {
             Alert.alert(
                 'Mã khách hàng không được nhập quá 5 ký tự',
@@ -97,11 +100,14 @@ export default class AddCustomer extends Component {
             Fax: this.state.fax
         };
 
+        const login_access_token = await AsyncStorage.getItem(LOGIN_ACCESS_TOKEN);
+
         fetch('http://192.168.100.200:88/api/Customers', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + login_access_token
             },
             body: JSON.stringify(obj)
         })

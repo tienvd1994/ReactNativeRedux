@@ -9,6 +9,8 @@ import {
   ScrollView
 } from 'react-native';
 
+import { DASHBOARD, SALE } from './../constants/NavigatorName';
+
 export default class DrawerItems extends Component {
   render() {
     const { navigate } = this.props.navigation;
@@ -25,14 +27,14 @@ export default class DrawerItems extends Component {
           </View>
         </View>
         <View style={{ borderBottomWidth: 2, borderColor: '#d6d7da', paddingBottom: 20, paddingLeft: 10 }}>
-          <TouchableOpacity style={styles.menu_item} onPress={() => navigate('Dashboard')}>
+          <TouchableOpacity style={styles.menu_item} onPress={() => navigate(DASHBOARD)}>
             <Image
               style={styles.menu_image}
               source={require('./../images/ic_home.png')}
             />
             <Text>Tổng quan</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menu_item} onPress={() => navigate('Sale')}>
+          <TouchableOpacity style={styles.menu_item} onPress={() => navigate(SALE)}>
             <Image
               style={styles.menu_image}
               source={require('./../images/ic_shopping.png')}

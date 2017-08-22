@@ -31,6 +31,7 @@ import List from './src/components/Order/List';
 
 import CheckBox from 'react-native-check-box';
 import Login from './src/components/Account/Login';
+import Default from './src/components/Default';
 
 const SapoCloneStack = StackNavigator({
   Dashboard: {
@@ -212,6 +213,9 @@ const SapoCloneStack = StackNavigator({
 });
 
 const SapoCloneDrawer = DrawerNavigator({
+  Default: {
+    screen: Default
+  },
   Login: {
     screen: Login
   },

@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import { LOGIN_ACCESS_TOKEN } from './../../constants/AsyncStoregeName';
+import { DASHBOARD } from './../../constants/NavigatorName';
 
 class Login extends Component {
     constructor(props) {
@@ -16,15 +17,6 @@ class Login extends Component {
             username: '',
             password: ''
         };
-    }
-
-    async componentWillMount() {
-        const login_access_token = await AsyncStorage.getItem(LOGIN_ACCESS_TOKEN);
-
-        if (login_access_token !== undefined) {
-            this.props.navigation.navigate('Dashboard');
-            return;
-        }
     }
 
     async _onValueChange(item, selectedValue) {
@@ -51,7 +43,7 @@ class Login extends Component {
             .then((response) => response.json())
             .then((responseJson) => {
                 this._onValueChange(LOGIN_ACCESS_TOKEN, responseJson.access_token);
-                this.props.navigation.navigate('Dashboard');
+                this.props.navigation.navigate(DASHBOARD);
             })
             .catch((error) => {
                 console.log(error);

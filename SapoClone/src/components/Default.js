@@ -7,18 +7,18 @@ import {
 } from 'react-native';
 
 import { LOGIN_ACCESS_TOKEN } from './../constants/AsyncStoregeName';
-import { DASHBOARD } from './../constants/NavigatorName';
+import { DASHBOARD, LOGIN } from './../constants/NavigatorName';
 
 export default class Default extends Component {
     async componentWillMount() {
         const login_access_token = await AsyncStorage.getItem(LOGIN_ACCESS_TOKEN);
 
-        if (login_access_token !== undefined) {
+        if (login_access_token !== null) {
             this.props.navigation.navigate(DASHBOARD);
             return;
         }
         else {
-            this.props.navigation.navigate('Login');
+            this.props.navigation.navigate(LOGIN);
             return;
         }
     }

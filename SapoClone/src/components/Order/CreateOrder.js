@@ -22,6 +22,8 @@ let totalVAT = 0;
 export default class CreateOrder extends Component {
     constructor(props) {
         super(props);
+        console.log(products);
+
         this.state = {
             switched: true,
             dataSource: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 != r2 })

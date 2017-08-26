@@ -7,7 +7,7 @@ import {
     AsyncStorage
 } from 'react-native';
 
-import { LOGIN_ACCESS_TOKEN } from './../../constants/AsyncStoregeName';
+import { LOGIN_ACCESS_TOKEN, ACCOUNT_USERNAME } from './../../constants/AsyncStoregeName';
 import { DASHBOARD } from './../../constants/NavigatorName';
 
 class Login extends Component {
@@ -43,6 +43,7 @@ class Login extends Component {
             .then((response) => response.json())
             .then((responseJson) => {
                 this._onValueChange(LOGIN_ACCESS_TOKEN, responseJson.access_token);
+                this._onValueChange(ACCOUNT_USERNAME, JSON.stringify({ userName: responseJson.userName }));
                 this.props.navigation.navigate(DASHBOARD);
             })
             .catch((error) => {

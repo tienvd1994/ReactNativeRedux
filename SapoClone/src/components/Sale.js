@@ -9,6 +9,8 @@ import {
     Image
 } from 'react-native';
 
+import { CREATE_ORDER } from './../constants/NavigatorName';
+
 export default class Sale extends Component {
     render() {
         const { navigate } = this.props.navigation;
@@ -16,7 +18,7 @@ export default class Sale extends Component {
             <View style={{ flex: 1, backgroundColor: '#f8f8ff' }}>
                 <StatusBar backgroundColor="#017a01" />
                 <View style={{ flex: 1, alignItems: 'center', borderBottomWidth: 0.5, borderColor: '#d6d7da' }}>
-                    <TouchableOpacity underlayColor='transparent' style={{ flex: 1, width: '100%', alignItems: 'center' }} onPress={() => navigate('CreateOrder')}>
+                    <TouchableOpacity underlayColor='transparent' style={{ flex: 1, width: '100%', alignItems: 'center' }} onPress={() => navigate(CREATE_ORDER)}>
                         <Image
                             style={{ width: 50, height: 50, marginTop: 50 }}
                             source={require('./../images/easy_add_sale.png')}

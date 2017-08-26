@@ -6,12 +6,43 @@ import {
   View,
   TouchableOpacity,
   Image,
-  ScrollView
+  ScrollView,
+  AsyncStorage,
+  Alert
 } from 'react-native';
 
-import { DASHBOARD, SALE } from './../constants/NavigatorName';
+import { DASHBOARD, SALE, LOGIN } from './../constants/NavigatorName';
+import { ACCOUNT_USERNAME, LOGIN_ACCESS_TOKEN } from './../constants/AsyncStoregeName';
 
 export default class DrawerItems extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      userName: ''
+    }
+  }
+
+  // Làm gì nhỉ.
+  async componentWillReceiveProps(nextProps) {
+    const account_username = await AsyncStorage.getItem(ACCOUNT_USERNAME);
+    const account = JSON.parse(account_username);
+
+    if (account_username != null) {
+      this.setState({ userName: account.userName });
+    }
+  }
+
+  async _userLogout() {
+    try {
+      await AsyncStorage.removeItem(LOGIN_ACCESS_TOKEN);
+      await AsyncStorage.removeItem(ACCOUNT_USERNAME);
+      this.props.navigation.navigate(LOGIN);
+    } catch (error) {
+      console.log('AsyncStorage error: ' + error.message);
+    }
+  }
+
   render() {
     const { navigate } = this.props.navigation;
     return (
@@ -21,12 +52,12 @@ export default class DrawerItems extends Component {
             style={{ height: 150 }}
             source={require('./../images/tran-xuyen-sang-phong-ngu.jpg')}
           />
-          <View style={{ paddingLeft: 15, paddingTop: 5, paddingBottom: 5, position: 'absolute', backgroundColor: '#0fb80f', width: '100%', bottom: 0, opacity: 0.5 }}>
-            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Nguyễn Văn A</Text>
-            <Text style={{ color: '#fff' }}>nguyenvana@gmail.com</Text>
+          <View style={styles.infoAccount}>
+            <Text style={styles.accountUserName}>{this.state.userName}</Text>
+            <Text style={styles.white}>nguyenvana@gmail.com</Text>
           </View>
         </View>
-        <View style={{ borderBottomWidth: 2, borderColor: '#d6d7da', paddingBottom: 20, paddingLeft: 10 }}>
+        <View style={styles.containerItems}>
           <TouchableOpacity style={styles.menu_item} onPress={() => navigate(DASHBOARD)}>
             <Image
               style={styles.menu_image}
@@ -70,7 +101,7 @@ export default class DrawerItems extends Component {
             <Text>Tài khoản</Text>
           </TouchableOpacity>
         </View>
-        <View style={{ paddingBottom: 20, paddingLeft: 10, paddingTop: 10 }}>
+        <View style={styles.containerOther}>
           <Text>Khác</Text>
           <TouchableOpacity style={styles.menu_item} onPress={() => navigate('Dashboard')}>
             <Image
@@ -93,7 +124,7 @@ export default class DrawerItems extends Component {
             />
             <Text>Cài đặt</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menu_item} onPress={() => navigate('Sale')}>
+          <TouchableOpacity style={styles.menu_item} onPress={this._userLogout.bind(this)}>
             <Image
               style={styles.menu_image}
               source={require('./../images/ic_logout.png')}
@@ -116,5 +147,32 @@ const styles = StyleSheet.create({
     height: 20,
     marginRight: 25,
     tintColor: '#a9a9a9',
+  },
+  infoAccount: {
+    paddingLeft: 15,
+    paddingTop: 5,
+    paddingBottom: 5,
+    position: 'absolute',
+    backgroundColor: '#0fb80f',
+    width: '100%',
+    bottom: 0, opacity: 0.5
+  },
+  accountUserName: {
+    color: '#fff',
+    fontWeight: 'bold'
+  },
+  white: {
+    color: '#fff'
+  },
+  containerItems: {
+    borderBottomWidth: 2,
+    borderColor: '#d6d7da',
+    paddingBottom: 20,
+    paddingLeft: 10
+  },
+  containerOther: {
+    paddingBottom: 20,
+    paddingLeft: 10,
+    paddingTop: 10
   }
 });

@@ -12,10 +12,11 @@ import {
     AsyncStorage
 } from 'react-native';
 
+import { BRANCH } from './../constants/NavigatorName';
+
 export default class Dashboard extends Component {
     render() {
         const { navigate } = this.props.navigation;
-        const access_token = AsyncStorage.getItem('Login_access_token');
         return (
             <ScrollView style={styles.container}>
                 <StatusBar backgroundColor="#017a01" />
@@ -37,7 +38,7 @@ export default class Dashboard extends Component {
                                 source={require('./../images/easy_next.png')}
                             />
                         </TouchableHighlight>
-                        <TouchableHighlight underlayColor='transparent' onPress={() => navigate('Branch')}>
+                        <TouchableHighlight underlayColor='transparent' onPress={() => navigate(BRANCH)}>
                             <Image
                                 style={styles.filterImage}
                                 source={require('./../images/ic_location_dashboard.png')}

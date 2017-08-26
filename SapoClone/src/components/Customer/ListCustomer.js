@@ -11,6 +11,7 @@ import {
     RefreshControl,
     AsyncStorage
 } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 
 import { LOGIN_ACCESS_TOKEN } from './../../constants/AsyncStoregeName';
 
